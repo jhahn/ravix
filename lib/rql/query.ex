@@ -58,15 +58,14 @@ defmodule Ravix.RQL.Query do
   @doc """
   Creates a new query for the informed collection or index
 
-  Returns a `Ravix.RQL.Query` or an `{:error, :query_document_must_be_informed}` if no collection/index was informed
+  Returns a `Ravix.RQL.Query`
 
   ## Examples
       iex> Ravix.RQL.Query.from("test")
   """
-  @spec from(nil | String.t()) :: {:error, :query_document_must_be_informed} | Query.t()
-  def from(nil), do: {:error, :query_document_must_be_informed}
 
-  def from(document) do
+  @spec from(String.t()) :: Query.t()
+  def from(document) when is_binary(document) do
     %Query{
       from_token: From.from(document)
     }
@@ -75,16 +74,13 @@ defmodule Ravix.RQL.Query do
   @doc """
   Creates a new query with an alias for the informed collection or index
 
-  Returns a `Ravix.RQL.Query` or an `{:error, :query_document_must_be_informed}` if no collection/index was informed
+  Returns a `Ravix.RQL.Query`
 
   ## Examples
       iex> Ravix.RQL.Query.from("test", "t")
   """
-  @spec from(nil | String.t(), String.t()) ::
-          {:error, :query_document_must_be_informed} | Query.t()
-  def from(nil, _), do: {:error, :query_document_must_be_informed}
-
-  def from(document, as_alias) when not is_nil(as_alias) do
+  @spec from(String.t(), String.t()) :: Query.t()
+  def from(document, as_alias) when is_binary(document) and is_binary(as_alias) do
     %Query{
       from_token: From.from(document),
       aliases: Map.put(%{}, document, as_alias)
